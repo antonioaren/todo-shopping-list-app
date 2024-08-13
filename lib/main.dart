@@ -8,10 +8,21 @@ void main() {
 
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
+  var favorite = <WordPair>[]; // This is how a list is manage in Flutter.
 
   void getNext() {
     current = WordPair.random();
     // This notify all elements that watch this state.
+    notifyListeners();
+  }
+
+  void toggleFavorite() {
+    // This is how we can verify if a word is in the list.(Similar to javascript)
+    if (favorite.contains(current)) {
+      favorite.remove(current);
+    } else {
+      favorite.add(current);
+    }
     notifyListeners();
   }
 }
@@ -80,6 +91,16 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     // This is the way to call a state in Flutter. Watching the context.
     var appState = context.watch<MyAppState>();
+    var pair = appState.current;
+
+    // Here we declare the type of icon we need in home page.
+    IconData icon;
+
+    if (appState.favorite.contains(pair)) {
+      icon = Icons.favorite;
+    } else {
+      icon = Icons.favorite_border;
+    }
 
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -99,11 +120,18 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'Welcome to yout favorite shopping list!',
             ),
-            Text(appState.current.asLowerCase),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Display(wordPair: pair),
+            ),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            ElevatedButton.icon(
+                onPressed: appState.toggleFavorite,
+                icon: Icon(icon),
+                label: Text('Like')),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               textDirection: TextDirection.rtl,
@@ -113,7 +141,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: const Icon(Icons.add),
                 ),
                 ElevatedButton(
-                    onPressed: appState.getNext, child: Text('Next')),
+                    onPressed: appState.getNext,
+                    child: Text('Another random word')),
                 ElevatedButton(
                   onPressed: _decrementCounter,
                   child: const Icon(Icons.remove),
@@ -131,5 +160,33 @@ class _MyHomePageState extends State<MyHomePage> {
 
       // How to add a new button
     );
+  }
+}
+
+class Display extends StatelessWidget {
+  const Display({
+    super.key,
+    required this.wordPair,
+  });
+
+  final WordPair wordPair;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final style = theme.textTheme.displayMedium!.copyWith(
+      color: theme.colorScheme.onPrimary,
+    );
+
+    return Card(
+        color: theme.colorScheme.inversePrimary,
+        child: Padding(
+          padding: const EdgeInsets.all(40),
+          child: Text(
+            wordPair.asPascalCase,
+            style: style,
+            semanticsLabel: "${wordPair.first}  ${wordPair.second}",
+          ),
+        ));
   }
 }
