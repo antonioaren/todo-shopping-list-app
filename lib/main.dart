@@ -1,7 +1,19 @@
+import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
+}
+
+class MyAppState extends ChangeNotifier {
+  var current = WordPair.random();
+
+  void getNext() {
+    current = WordPair.random();
+    // This notify all elements that watch this state.
+    notifyListeners();
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -10,29 +22,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 216, 110, 17)),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (context) => MyAppState(),
+      child: MaterialApp(
+        title: 'Namer App',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+        ),
+        home: const MyHomePage(
+          title: 'Lista de la compra',
+        ),
       ),
-      home: const MyHomePage(title: 'Lista de la compra'),
     );
   }
 }
@@ -77,6 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // This is the way to call a state in Flutter. Watching the context.
+    var appState = context.watch<MyAppState>();
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -95,6 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'Welcome to yout favorite shopping list!',
             ),
+            Text(appState.current.asLowerCase),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
@@ -107,6 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: _incrementCounter,
                   child: const Icon(Icons.add),
                 ),
+                ElevatedButton(
+                    onPressed: appState.getNext, child: Text('Next')),
                 ElevatedButton(
                   onPressed: _decrementCounter,
                   child: const Icon(Icons.remove),
