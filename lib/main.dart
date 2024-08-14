@@ -64,44 +64,57 @@ class MyApp extends StatelessWidget {
 // ...
 
 class MyHomePage extends StatefulWidget {
-  final dynamic title;
-
   const MyHomePage({super.key, required this.title});
+
+  final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var _selectedIndex = 0;
+
+  void _setIndexSelected(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final pages = <Widget>[
+      HomePage(),
+      Placeholder(),
+    ];
+
+    Widget page = pages.elementAt(_selectedIndex);
+
     return Scaffold(
       body: Row(
         children: [
           SafeArea(
             // This is a widget that makes sure that the content is not behind the status bar or notch.
             child: NavigationRail(
-              extended: false, // Add the text
-              destinations: [
-                NavigationRailDestination(
-                  icon: Icon(Icons.home),
-                  label: Text('Home'),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.favorite),
-                  label: Text('Favorites'),
-                ),
-              ],
-              selectedIndex: 0, // This is the default selected index
-              onDestinationSelected: (value) {
-                print('selected: $value');
-              },
-            ),
+                extended: false, // Add the text
+                destinations: [
+                  NavigationRailDestination(
+                    icon: Icon(Icons.home),
+                    label: Text('Home'),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.favorite),
+                    label: Text('Favorites'),
+                  ),
+                ],
+                selectedIndex:
+                    _selectedIndex, // This is the default selected index
+                onDestinationSelected: _setIndexSelected),
           ),
           Expanded(
             child: Container(
               color: Theme.of(context).colorScheme.primaryContainer,
-              child: _HomePage(),
+              child: page,
             ),
           ),
         ],
@@ -110,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class _HomePage extends StatelessWidget {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
