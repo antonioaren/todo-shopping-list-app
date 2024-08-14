@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final pages = <Widget>[
       HomePage(),
-      Placeholder(),
+      FavoritePage(),
     ];
 
     Widget page = pages.elementAt(_selectedIndex);
@@ -102,8 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SafeArea(
               // This is a widget that makes sure that the content is not behind the status bar or notch.
               child: NavigationRail(
-                  extended:
-                      _isMenuLabelsShowUp(constrains.maxWidth), // Add the text
+                  extended: _isMenuLabelsShowUp(constrains.maxWidth),
                   destinations: [
                     NavigationRailDestination(
                       icon: Icon(Icons.home),
@@ -183,6 +182,21 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class FavoritePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
+    var favorites = appState.favorites;
+
+    return ListView(
+      children: <Widget>[
+        Text('All favorites'),
+        for (var fav in favorites) Display(wordPair: fav)
+      ],
     );
   }
 }
