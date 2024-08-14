@@ -81,6 +81,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  bool _isMenuLabelsShowUp(double width) {
+    return width >= 600;
+  }
+
   @override
   Widget build(BuildContext context) {
     final pages = <Widget>[
@@ -90,36 +94,40 @@ class _MyHomePageState extends State<MyHomePage> {
 
     Widget page = pages.elementAt(_selectedIndex);
 
-    return Scaffold(
-      body: Row(
-        children: [
-          SafeArea(
-            // This is a widget that makes sure that the content is not behind the status bar or notch.
-            child: NavigationRail(
-                extended: false, // Add the text
-                destinations: [
-                  NavigationRailDestination(
-                    icon: Icon(Icons.home),
-                    label: Text('Home'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.favorite),
-                    label: Text('Favorites'),
-                  ),
-                ],
-                selectedIndex:
-                    _selectedIndex, // This is the default selected index
-                onDestinationSelected: _setIndexSelected),
-          ),
-          Expanded(
-            child: Container(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              child: page,
+    // This is a widget that gives us the constrains of the parent widget. We can make things responsive with this.
+    return LayoutBuilder(builder: (context, constrains) {
+      return Scaffold(
+        body: Row(
+          children: [
+            SafeArea(
+              // This is a widget that makes sure that the content is not behind the status bar or notch.
+              child: NavigationRail(
+                  extended:
+                      _isMenuLabelsShowUp(constrains.maxWidth), // Add the text
+                  destinations: [
+                    NavigationRailDestination(
+                      icon: Icon(Icons.home),
+                      label: Text('Home'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.favorite),
+                      label: Text('Favorites'),
+                    ),
+                  ],
+                  selectedIndex:
+                      _selectedIndex, // This is the default selected index
+                  onDestinationSelected: _setIndexSelected),
             ),
-          ),
-        ],
-      ),
-    );
+            Expanded(
+              child: Container(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                child: page,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
 
@@ -143,10 +151,7 @@ class HomePage extends StatelessWidget {
           const Text(
             'Welcome to yout favorite shopping list!',
           ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Display(wordPair: pair),
-          ),
+          Display(wordPair: pair),
           Text(
             'Counter: ${appState.counter}',
             style: Theme.of(context).textTheme.headlineMedium,
@@ -155,31 +160,26 @@ class HomePage extends StatelessWidget {
               onPressed: appState.toggleFavorite,
               icon: Icon(icon),
               label: Text('Like')),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            textDirection: TextDirection.rtl,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(50),
-                child: ElevatedButton(
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              textDirection: TextDirection.rtl,
+              children: <Widget>[
+                ElevatedButton(
                   onPressed: appState.incrementCounter,
                   child: const Icon(Icons.add),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(50),
-                child: ElevatedButton(
-                    onPressed: appState.getNext,
-                    child: Text('Another random word')),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(50),
-                child: ElevatedButton(
+                ElevatedButton(
+                  onPressed: appState.getNext,
+                  child: const Text('Another random word'),
+                ),
+                ElevatedButton(
                   onPressed: appState.decrementCounter,
                   child: const Icon(Icons.remove),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
         ],
       ),
