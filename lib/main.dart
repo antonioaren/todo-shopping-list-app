@@ -6,9 +6,21 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyAppState extends ChangeNotifier {
+class AppState extends ChangeNotifier {
   var current = WordPair.random();
-  var favorite = <WordPair>[]; // This is how a list is manage in Flutter.
+  var favorites = <WordPair>[]; // This is how a list is manage in Flutter.
+
+  int counter = 0;
+
+  void incrementCounter() {
+    counter++;
+    notifyListeners();
+  }
+
+  void decrementCounter() {
+    counter--;
+    notifyListeners();
+  }
 
   void getNext() {
     current = WordPair.random();
@@ -18,10 +30,10 @@ class MyAppState extends ChangeNotifier {
 
   void toggleFavorite() {
     // This is how we can verify if a word is in the list.(Similar to javascript)
-    if (favorite.contains(current)) {
-      favorite.remove(current);
+    if (favorites.contains(current)) {
+      favorites.remove(current);
     } else {
-      favorite.add(current);
+      favorites.add(current);
     }
     notifyListeners();
   }
@@ -34,7 +46,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
+      create: (context) => AppState(),
       child: MaterialApp(
         title: 'Namer App',
         theme: ThemeData(
@@ -49,17 +61,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// ...
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -68,91 +73,131 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  var _selectedIndex = 0;
 
-  void _incrementCounter() {
+  void _setIndexSelected(int index) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _selectedIndex = index;
     });
   }
 
-  void _decrementCounter() {
-    setState(() {
-      _counter--;
-    });
+  bool _isMenuLabelsShowUp(double width) {
+    return width >= 600;
   }
 
   @override
   Widget build(BuildContext context) {
-    // This is the way to call a state in Flutter. Watching the context.
-    var appState = context.watch<MyAppState>();
+    final pages = <Widget>[
+      HomePage(),
+      FavoritePage(),
+    ];
+
+    Widget page = pages.elementAt(_selectedIndex);
+
+    // This is a widget that gives us the constrains of the parent widget. We can make things responsive with this.
+    return LayoutBuilder(builder: (context, constrains) {
+      return Scaffold(
+        body: Row(
+          children: [
+            SafeArea(
+              // This is a widget that makes sure that the content is not behind the status bar or notch.
+              child: NavigationRail(
+                  extended: _isMenuLabelsShowUp(constrains.maxWidth),
+                  destinations: [
+                    NavigationRailDestination(
+                      icon: Icon(Icons.home),
+                      label: Text('Home'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.favorite),
+                      label: Text('Favorites'),
+                    ),
+                  ],
+                  selectedIndex:
+                      _selectedIndex, // This is the default selected index
+                  onDestinationSelected: _setIndexSelected),
+            ),
+            Expanded(
+              child: Container(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                child: page,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+}
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
     var pair = appState.current;
 
-    // Here we declare the type of icon we need in home page.
     IconData icon;
-
-    if (appState.favorite.contains(pair)) {
+    if (appState.favorites.contains(pair)) {
       icon = Icons.favorite;
     } else {
       icon = Icons.favorite_border;
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            const Text(
-              'Welcome to yout favorite shopping list!',
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Display(wordPair: pair),
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            ElevatedButton.icon(
-                onPressed: appState.toggleFavorite,
-                icon: Icon(icon),
-                label: Text('Like')),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          const Text(
+            'Welcome to yout favorite shopping list!',
+          ),
+          Display(wordPair: pair),
+          Text(
+            'Counter: ${appState.counter}',
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          ElevatedButton.icon(
+              onPressed: appState.toggleFavorite,
+              icon: Icon(icon),
+              label: Text('Like')),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               textDirection: TextDirection.rtl,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed: _incrementCounter,
+                  onPressed: appState.incrementCounter,
                   child: const Icon(Icons.add),
                 ),
                 ElevatedButton(
-                    onPressed: appState.getNext,
-                    child: Text('Another random word')),
+                  onPressed: appState.getNext,
+                  child: const Text('Another random word'),
+                ),
                 ElevatedButton(
-                  onPressed: _decrementCounter,
+                  onPressed: appState.decrementCounter,
                   child: const Icon(Icons.remove),
                 ),
               ],
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
-      /* floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), */
+    );
+  }
+}
 
-      // How to add a new button
+class FavoritePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
+    var favorites = appState.favorites;
+
+    return ListView(
+      children: <Widget>[
+        Text('All favorites'),
+        Text(favorites.length.toString()),
+        for (var fav in favorites) Display(wordPair: fav)
+      ],
     );
   }
 }
