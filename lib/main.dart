@@ -191,7 +191,6 @@ class FavoritePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
     var favorites = appState.favorites;
-    var pair = appState.current;
 
     return ListView(
       children: <Widget>[
@@ -200,7 +199,7 @@ class FavoritePage extends StatelessWidget {
         for (var fav in favorites)
           ListTile(
             leading: Icon(Icons.favorite),
-            title: Text(pair.asLowerCase),
+            title: Text(fav.asLowerCase),
           )
       ],
     );
