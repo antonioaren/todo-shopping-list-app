@@ -10,19 +10,21 @@ void main() {
 class ShoppingList extends StatelessWidget {
   const ShoppingList({super.key});
 
+  final String title = 'Shopping List';
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => AppState(),
       child: MaterialApp(
-        title: 'Shopping List',
+        title: title,
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         ),
-        home: const Routes(
-          title: 'Lista de la compra',
+        home: Routes(
+          title: title,
         ),
       ),
     );
