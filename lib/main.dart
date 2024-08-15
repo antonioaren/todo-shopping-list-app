@@ -1,42 +1,11 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../states/app_state.dart';
+import './screens/favorites.dart';
 
 void main() {
   runApp(const MyApp());
-}
-
-class AppState extends ChangeNotifier {
-  var current = WordPair.random();
-  var favorites = <WordPair>[]; // This is how a list is manage in Flutter.
-
-  int counter = 0;
-
-  void incrementCounter() {
-    counter++;
-    notifyListeners();
-  }
-
-  void decrementCounter() {
-    counter--;
-    notifyListeners();
-  }
-
-  void getNext() {
-    current = WordPair.random();
-    // This notify all elements that watch this state.
-    notifyListeners();
-  }
-
-  void toggleFavorite() {
-    // This is how we can verify if a word is in the list.(Similar to javascript)
-    if (favorites.contains(current)) {
-      favorites.remove(current);
-    } else {
-      favorites.add(current);
-    }
-    notifyListeners();
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -195,26 +164,6 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-class FavoritePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
-    var favorites = appState.favorites;
-
-    return ListView(
-      children: <Widget>[
-        Text('All favorites'),
-        Text(favorites.length.toString()),
-        for (var fav in favorites)
-          ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text(fav.asLowerCase),
-          )
-      ],
     );
   }
 }
