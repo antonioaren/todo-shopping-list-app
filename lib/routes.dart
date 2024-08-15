@@ -12,6 +12,7 @@ class Routes extends StatefulWidget {
   State<Routes> createState() => _Routes();
 }
 
+// Way to store the page and the destination in a single object.
 class PageDestination {
   final Widget page;
   final NavigationRailDestination destination;
@@ -21,6 +22,23 @@ class PageDestination {
     required this.destination,
   });
 }
+
+final pageDestinations = [
+  PageDestination(
+    page: HomePage(),
+    destination: NavigationRailDestination(
+      icon: Icon(Icons.home),
+      label: Text('Home'),
+    ),
+  ),
+  PageDestination(
+    page: FavoritePage(),
+    destination: NavigationRailDestination(
+      icon: Icon(Icons.favorite),
+      label: Text('Favorites'),
+    ),
+  ),
+];
 
 class _Routes extends State<Routes> {
   // Here is the routes that we can use in the app.
@@ -38,23 +56,6 @@ class _Routes extends State<Routes> {
 
   @override
   Widget build(BuildContext context) {
-    final pageDestinations = [
-      PageDestination(
-        page: HomePage(),
-        destination: NavigationRailDestination(
-          icon: Icon(Icons.home),
-          label: Text('Home'),
-        ),
-      ),
-      PageDestination(
-        page: FavoritePage(),
-        destination: NavigationRailDestination(
-          icon: Icon(Icons.favorite),
-          label: Text('Favorites'),
-        ),
-      ),
-    ];
-
     // This is a widget that gives us the constrains of the parent widget. We can make things responsive with this.
     return LayoutBuilder(builder: (context, constrains) {
       return Scaffold(

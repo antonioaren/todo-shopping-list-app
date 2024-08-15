@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 class AppState extends ChangeNotifier {
   var current = WordPair.random();
   var favorites = <WordPair>[]; // This is how a list is manage in Flutter.
-
   int counter = 0;
 
   void incrementCounter() {
