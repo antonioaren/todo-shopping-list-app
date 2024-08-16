@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'presentation/providers/app_state.dart';
+import 'package:todo_shopping_list_app/presentation/providers/word.dart';
+import 'presentation/providers/counter.dart';
 import 'presentation/routes.dart';
 
 void main() {
@@ -15,8 +16,11 @@ class ShoppingList extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AppState(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CounterState()),
+        ChangeNotifierProvider(create: (context) => WordState()),
+      ],
       child: MaterialApp(
         title: title,
         theme: ThemeData(

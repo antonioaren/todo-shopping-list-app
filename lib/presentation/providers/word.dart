@@ -1,25 +1,22 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 
-class AppState extends ChangeNotifier {
+class WordState extends ChangeNotifier {
   var current = WordPair.random();
   var favorites = <WordPair>[]; // This is how a list is manage in Flutter.
-  int counter = 0;
 
-  void incrementCounter() {
-    counter++;
-    notifyListeners();
-  }
-
-  void decrementCounter() {
-    counter--;
-    notifyListeners();
-  }
-
-  void getNext() {
+  void getNextWord() {
     current = WordPair.random();
     // This notify all elements that watch this state.
     notifyListeners();
+  }
+
+  List<WordPair> getFavorites() {
+    return favorites;
+  }
+
+  WordPair getCurrent() {
+    return current;
   }
 
   void toggleFavorite() {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/app_state.dart';
+import '../providers/word.dart';
 
 class FavoritePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
-    var favorites = appState.favorites;
+    var wordState = context.watch<WordState>();
+    var favorites = wordState.getFavorites();
 
     return ListView(
       children: <Widget>[

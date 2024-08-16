@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/app_state.dart';
+import 'package:todo_shopping_list_app/presentation/providers/word.dart';
+import '../providers/counter.dart';
 import '../widgets/global.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
-    var pair = appState.current;
+    var wordState = context.watch<WordState>();
+    var counterState = context.watch<CounterState>();
+
+    var pair = wordState.getCurrent();
+    var counter = counterState.getCounter();
+    var favorites = wordState.getFavorites();
 
     // This lines it is just to get the actual theme. This contains styles, colors, etc.
     var theme = Theme.of(context);
@@ -19,7 +24,7 @@ class HomePage extends StatelessWidget {
     );
 
     IconData icon;
-    if (appState.favorites.contains(pair)) {
+    if (favorites.contains(pair)) {
       icon = Icons.favorite;
     } else {
       icon = Icons.favorite_border;
@@ -38,11 +43,11 @@ class HomePage extends StatelessWidget {
           ),
           Display(wordPair: pair),
           Text(
-            'Counter: ${appState.counter}',
+            'Counter: $counter',
             style: theme.textTheme.headlineMedium,
           ),
           ElevatedButton.icon(
-              onPressed: appState.toggleFavorite,
+              onPressed: wordState.toggleFavorite,
               icon: Icon(icon),
               label: Text('Like')),
           Padding(
@@ -52,15 +57,15 @@ class HomePage extends StatelessWidget {
               textDirection: TextDirection.rtl,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed: appState.incrementCounter,
+                  onPressed: counterState.incrementCounter,
                   child: const Icon(Icons.add),
                 ),
                 ElevatedButton(
-                  onPressed: appState.getNext,
+                  onPressed: wordState.getNextWord,
                   child: const Text('Another random word'),
                 ),
                 ElevatedButton(
-                  onPressed: appState.decrementCounter,
+                  onPressed: counterState.decrementCounter,
                   child: const Icon(Icons.remove),
                 ),
               ],
