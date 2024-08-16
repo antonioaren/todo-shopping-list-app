@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './screens/favorites.dart';
-import './screens/home.dart';
+import 'screens/favorites.dart';
+import 'screens/home.dart';
 
 class Routes extends StatefulWidget {
   const Routes({super.key, required this.title});

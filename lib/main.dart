@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../states/app_state.dart';
-import './routes.dart';
+import 'presentation/providers/app_state.dart';
+import 'presentation/routes.dart';
 
 void main() {
   runApp(const ShoppingList());
