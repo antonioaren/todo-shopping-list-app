@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CounterState extends ChangeNotifier {
   int counter = 0;
 
-  int getCounter() {
+  int getCurrent() {
     return counter;
   }
 

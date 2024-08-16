@@ -10,8 +10,8 @@ class HomePage extends StatelessWidget {
     var wordState = context.watch<WordState>();
     var counterState = context.watch<CounterState>();
 
-    var pair = wordState.getCurrent();
-    var counter = counterState.getCounter();
+    var currentWord = wordState.getCurrent();
+    var currentCounter = counterState.getCurrent();
     var favorites = wordState.getFavorites();
 
     // This lines it is just to get the actual theme. This contains styles, colors, etc.
@@ -24,7 +24,7 @@ class HomePage extends StatelessWidget {
     );
 
     IconData icon;
-    if (favorites.contains(pair)) {
+    if (favorites.contains(currentWord)) {
       icon = Icons.favorite;
     } else {
       icon = Icons.favorite_border;
@@ -41,9 +41,9 @@ class HomePage extends StatelessWidget {
               style: style.copyWith(fontWeight: FontWeight.w200),
             ),
           ),
-          Display(wordPair: pair),
+          Display(wordPair: currentWord),
           Text(
-            'Counter: $counter',
+            'Counter: $currentCounter',
             style: theme.textTheme.headlineMedium,
           ),
           ElevatedButton.icon(
