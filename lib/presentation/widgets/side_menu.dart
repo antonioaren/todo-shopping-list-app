@@ -36,15 +36,16 @@ class _SideMenu extends State<SideMenu> {
               // This is a widget that makes sure that the content is not behind the status bar or notch.
               child: NavigationRail(
                   extended: _isMenuLabelsShowUp(constrains.maxWidth),
-                  destinations:
-                      pageDestinations.map((e) => e.destination).toList(),
+                  destinations: Routes.pageDestinations
+                      .map((e) => e.destination)
+                      .toList(),
                   selectedIndex: _selectedIndex,
                   onDestinationSelected: _setIndexSelected),
             ),
             Expanded(
               child: Container(
                 color: Theme.of(context).colorScheme.primaryContainer,
-                child: pageDestinations.elementAt(_selectedIndex).page,
+                child: Routes.pageDestinations.elementAt(_selectedIndex).page,
               ),
             ),
           ],
