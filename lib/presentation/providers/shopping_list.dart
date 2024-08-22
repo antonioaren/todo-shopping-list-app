@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CounterState extends ChangeNotifier {
+class ShoppingListState extends ChangeNotifier {
   List<String> items = [];
 
   List<String> getCurrent() {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_shopping_list_app/presentation/providers/word.dart';
 import 'presentation/providers/counter.dart';
+import 'presentation/providers/shopping_list.dart';
 import 'presentation/widgets/side_menu.dart';
 
 void main() {
@@ -20,6 +21,7 @@ class ShoppingList extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => CounterState()),
         ChangeNotifierProvider(create: (context) => WordState()),
+        ChangeNotifierProvider(create: (context) => ShoppingListState()),
       ],
       child: MaterialApp(
         title: title,
