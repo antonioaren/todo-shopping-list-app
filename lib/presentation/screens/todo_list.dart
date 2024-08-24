@@ -138,13 +138,15 @@ class ContentList extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: CheckboxListTile(
                     value: items[index].isDone,
-                    title: Text(
-                      items[index].name,
+                    title: AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 400),
                       style: TextStyle(
+                        color: items[index].isDone ? Colors.grey : Colors.black,
                         decoration: items[index].isDone
                             ? TextDecoration.lineThrough
                             : TextDecoration.none,
                       ),
+                      child: Text(items[index].name),
                     ),
                     onChanged: (bool? value) {
                       shoppingListState.toggleItem(items[index].id);
