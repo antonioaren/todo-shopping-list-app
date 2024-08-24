@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_shopping_list_app/presentation/screens/todo_list.dart';
 import 'screens/favorites.dart';
 import 'screens/home.dart';
 
@@ -16,7 +17,7 @@ class PageDestination {
 }
 
 class Routes {
-  static final List<PageDestination> pageDestinations = [
+  static final List<PageDestination> pageDestinations = <PageDestination>[
     PageDestination(
       page: HomePage(),
       destination: NavigationRailDestination(
@@ -29,6 +30,13 @@ class Routes {
       destination: NavigationRailDestination(
         icon: Icon(Icons.favorite),
         label: Text('Favorites'),
+      ),
+    ),
+    PageDestination(
+      page: TodoList(),
+      destination: NavigationRailDestination(
+        icon: Icon(Icons.list),
+        label: Text('Shopping List'),
       ),
     ),
   ];

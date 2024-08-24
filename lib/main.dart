@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:nested/nested.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_shopping_list_app/presentation/providers/word.dart';
 import 'presentation/providers/counter.dart';
+import 'presentation/providers/shopping_list.dart';
 import 'presentation/widgets/side_menu.dart';
 
 void main() {
@@ -17,9 +19,10 @@ class ShoppingList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => CounterState()),
-        ChangeNotifierProvider(create: (context) => WordState()),
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider(create: (BuildContext context) => CounterState()),
+        ChangeNotifierProvider(create: (BuildContext context) => WordState()),
+        ChangeNotifierProvider(create: (BuildContext context) => ShoppingListState()),
       ],
       child: MaterialApp(
         title: title,

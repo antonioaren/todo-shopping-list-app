@@ -1,3 +1,4 @@
+import 'package:english_words/src/word_pair.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_shopping_list_app/presentation/providers/word.dart';
@@ -7,19 +8,19 @@ import '../widgets/global.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var wordState = context.watch<WordState>();
-    var counterState = context.watch<CounterState>();
+    WordState wordState = context.watch<WordState>();
+    CounterState counterState = context.watch<CounterState>();
 
-    var currentWord = wordState.getCurrent();
-    var currentCounter = counterState.getCurrent();
-    var favorites = wordState.getFavorites();
+    WordPair currentWord = wordState.getCurrent();
+    int currentCounter = counterState.getCurrent();
+    List<WordPair> favorites = wordState.getFavorites();
 
     // This lines it is just to get the actual theme. This contains styles, colors, etc.
-    var theme = Theme.of(context);
+    ThemeData theme = Theme.of(context);
 
     // Here we get some TextTheme that is defined in the theme, like displayMedium.
     // Then we copy the style, but with some modifications that we need to add.
-    var style = theme.textTheme.displayMedium!.copyWith(
+    TextStyle style = theme.textTheme.displayMedium!.copyWith(
       color: theme.colorScheme.onPrimary,
     );
 
