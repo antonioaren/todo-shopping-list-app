@@ -114,48 +114,80 @@ class ContentList extends StatelessWidget {
                 background: Container(
                   color: Colors.red,
                   alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Delete',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: DismissContent(),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CheckboxListTile(
-                    value: items[index].isDone,
-                    title: AnimatedDefaultTextStyle(
-                      duration: const Duration(milliseconds: 400),
-                      style: TextStyle(
-                        color: items[index].isDone ? Colors.grey : Colors.black,
-                        decoration: items[index].isDone
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none,
-                      ),
-                      child: Text(items[index].name),
-                    ),
-                    onChanged: (bool? value) {
-                      shoppingListState.toggleItem(items[index].id);
-                    },
-                  ),
-                ),
+                child: CheckboxContent(
+                    items: items,
+                    index: index,
+                    shoppingListState: shoppingListState),
               );
             },
           );
+        },
+      ),
+    );
+  }
+}
+
+class DismissContent extends StatelessWidget {
+  const DismissContent({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text(
+            'Delete',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CheckboxContent extends StatelessWidget {
+  const CheckboxContent({
+    super.key,
+    required this.items,
+    required this.index,
+    required this.shoppingListState,
+  });
+
+  final List<ShoppingListItem> items;
+  final int index;
+  final ShoppingListState shoppingListState;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: CheckboxListTile(
+        value: items[index].isDone,
+        title: AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 400),
+          style: TextStyle(
+            color: items[index].isDone ? Colors.grey : Colors.black,
+            decoration: items[index].isDone
+                ? TextDecoration.lineThrough
+                : TextDecoration.none,
+          ),
+          child: Text(items[index].name),
+        ),
+        onChanged: (bool? value) {
+          shoppingListState.toggleItem(items[index].id);
         },
       ),
     );
