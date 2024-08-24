@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class ShoppingListItem {
   final String name;
-  final int index;
+  final int id;
   late bool isDone;
 
   ShoppingListItem({
-    required this.index,
+    required this.id,
     required this.name,
     this.isDone = false,
   });
@@ -21,19 +21,18 @@ class ShoppingListState extends ChangeNotifier {
 
   void addItem(String item) {
     final index = shoppingListItems.length;
-    shoppingListItems.add(ShoppingListItem(index: index, name: item));
+    shoppingListItems.add(ShoppingListItem(id: index, name: item));
     notifyListeners();
   }
 
-  void toggleItem(int index) {
-    final item =
-        shoppingListItems.firstWhere((element) => element.index == index);
+  void toggleItem(int id) {
+    final item = shoppingListItems.firstWhere((element) => element.id == id);
     item.isDone = !item.isDone;
     notifyListeners();
   }
 
-  void removeItem(int index) {
-    shoppingListItems.removeWhere((element) => element.index == index);
+  void removeItem(int id) {
+    shoppingListItems.removeWhere((element) => element.id == id);
     notifyListeners();
   }
 }

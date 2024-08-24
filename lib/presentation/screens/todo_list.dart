@@ -50,15 +50,18 @@ class _TodoListState extends State<TodoList> {
           child: Column(
             children: [
               Row(
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  TextField(
-                    autofocus: true,
-                    focusNode: _myFocusNode,
-                    controller: _textFieldController,
-                    decoration: InputDecoration(
-                      hintText: 'Add new product',
+                  Expanded(
+                    child: TextField(
+                      autofocus: true,
+                      focusNode: _myFocusNode,
+                      controller: _textFieldController,
+                      decoration: InputDecoration(
+                        hintText: 'Add new product',
+                      ),
+                      onSubmitted: (String value) => onAddItem(),
                     ),
-                    onSubmitted: (String value) => onAddItem(),
                   ),
                   ElevatedButton(
                     onPressed: onAddItem,
@@ -89,7 +92,7 @@ class ContentList extends StatelessWidget {
     return Expanded(
       child: Consumer<ShoppingListState>(
         builder: (context, shoppingListState, child) {
-          final items = shoppingListState.getCurrent();
+          final List<ShoppingListItem> items = shoppingListState.getCurrent();
 
           return ListView.builder(
             shrinkWrap: true,
@@ -97,17 +100,17 @@ class ContentList extends StatelessWidget {
             itemBuilder: (context, index) {
               return Dismissible(
                 // Specify a key if the Slidable is dismissible.
-                key: ValueKey(items[index]),
+                key: ValueKey(items[index].id),
 
                 onDismissed: (direction) {
-                  shoppingListState.removeItem(index);
-
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Item dismissed'),
+                      content: Text('${items[index].name} removed'),
                     ),
                   );
+                  shoppingListState.removeItem(items[index].id);
                 },
+
                 background: Container(
                   color: Colors.red,
                   alignment: Alignment.centerRight,
@@ -135,9 +138,16 @@ class ContentList extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: CheckboxListTile(
                     value: items[index].isDone,
-                    title: Text(items[index].name),
+                    title: Text(
+                      items[index].name,
+                      style: TextStyle(
+                        decoration: items[index].isDone
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                      ),
+                    ),
                     onChanged: (bool? value) {
-                      shoppingListState.toggleItem(index);
+                      shoppingListState.toggleItem(items[index].id);
                     },
                   ),
                 ),
