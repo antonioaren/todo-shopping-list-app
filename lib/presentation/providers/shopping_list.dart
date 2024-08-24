@@ -1,19 +1,39 @@
 import 'package:flutter/material.dart';
 
-class ShoppingListState extends ChangeNotifier {
-  List<String> items = [];
+class ShoppingListItem {
+  final String name;
+  final int index;
+  late bool isDone;
 
-  List<String> getCurrent() {
-    return items;
+  ShoppingListItem({
+    required this.index,
+    required this.name,
+    this.isDone = false,
+  });
+}
+
+class ShoppingListState extends ChangeNotifier {
+  List<ShoppingListItem> shoppingListItems = [];
+
+  List<ShoppingListItem> getCurrent() {
+    return shoppingListItems;
   }
 
   void addItem(String item) {
-    items.add(item);
+    final index = shoppingListItems.length;
+    shoppingListItems.add(ShoppingListItem(index: index, name: item));
+    notifyListeners();
+  }
+
+  void toggleItem(int index) {
+    final item =
+        shoppingListItems.firstWhere((element) => element.index == index);
+    item.isDone = !item.isDone;
     notifyListeners();
   }
 
   void removeItem(int index) {
-    items.removeAt(index);
+    shoppingListItems.removeWhere((element) => element.index == index);
     notifyListeners();
   }
 }

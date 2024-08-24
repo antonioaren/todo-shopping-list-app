@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/shopping_list.dart';
 
 class TodoList extends StatefulWidget {
@@ -15,7 +14,6 @@ class _TodoListState extends State<TodoList> {
   @override
   void initState() {
     super.initState();
-
     _myFocusNode = FocusNode();
     _textFieldController = TextEditingController();
   }
@@ -32,6 +30,7 @@ class _TodoListState extends State<TodoList> {
       context,
       listen: false,
     );
+
     shoppingListState.addItem(_textFieldController.text);
     _textFieldController.clear();
     _myFocusNode.requestFocus();
@@ -52,91 +51,101 @@ class _TodoListState extends State<TodoList> {
             children: [
               Row(
                 children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      autofocus: true,
-                      focusNode: _myFocusNode,
-                      controller: _textFieldController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter a new item',
-                      ),
-                      onSubmitted: (String value) => onAddItem(),
+                  TextField(
+                    autofocus: true,
+                    focusNode: _myFocusNode,
+                    controller: _textFieldController,
+                    decoration: InputDecoration(
+                      hintText: 'Add new product',
                     ),
+                    onSubmitted: (String value) => onAddItem(),
                   ),
                   ElevatedButton(
                     onPressed: onAddItem,
                     child: Text('Add'),
                   ),
-                  Divider(),
                 ],
               ),
               Row(
                 children: <Widget>[
-                  Expanded(
-                    child: Consumer<ShoppingListState>(
-                      builder: (context, shoppingListState, child) {
-                        final items = shoppingListState.getCurrent();
-
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: items.length,
-                          itemBuilder: (context, index) {
-                            return Dismissible(
-                              // Specify a key if the Slidable is dismissible.
-                              key: ValueKey(items[index]),
-
-                              onDismissed: (direction) {
-                                shoppingListState.removeItem(index);
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Item dismissed'),
-                                  ),
-                                );
-                              },
-                              background: Container(
-                                color: Colors.red,
-                                alignment: Alignment.centerRight,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 20),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        'Delete',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.delete,
-                                        color: Colors.white,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CheckboxListTile(
-                                  value: true,
-                                  title: Text(items[index]),
-                                  onChanged: (bool? value) {},
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
+                  ContentList(),
                 ],
               )
             ],
           ),
         ),
       ],
+    );
+  }
+}
+
+class ContentList extends StatelessWidget {
+  const ContentList({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Consumer<ShoppingListState>(
+        builder: (context, shoppingListState, child) {
+          final items = shoppingListState.getCurrent();
+
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              return Dismissible(
+                // Specify a key if the Slidable is dismissible.
+                key: ValueKey(items[index]),
+
+                onDismissed: (direction) {
+                  shoppingListState.removeItem(index);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Item dismissed'),
+                    ),
+                  );
+                },
+                background: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Delete',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CheckboxListTile(
+                    value: items[index].isDone,
+                    title: Text(items[index].name),
+                    onChanged: (bool? value) {
+                      shoppingListState.toggleItem(index);
+                    },
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
