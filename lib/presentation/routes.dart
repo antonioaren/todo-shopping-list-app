@@ -17,7 +17,7 @@ class PageDestination {
 }
 
 class Routes {
-  static final List<PageDestination> pageDestinations = [
+  static final List<PageDestination> pageDestinations = <PageDestination>[
     PageDestination(
       page: HomePage(),
       destination: NavigationRailDestination(

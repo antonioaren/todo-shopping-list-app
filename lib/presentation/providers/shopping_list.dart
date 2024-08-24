@@ -13,26 +13,26 @@ class ShoppingListItem {
 }
 
 class ShoppingListState extends ChangeNotifier {
-  List<ShoppingListItem> shoppingListItems = [];
+  List<ShoppingListItem> shoppingListItems = <ShoppingListItem>[];
 
   List<ShoppingListItem> getCurrent() {
     return shoppingListItems;
   }
 
   void addItem(String item) {
-    final index = shoppingListItems.length;
+    final int index = shoppingListItems.length;
     shoppingListItems.add(ShoppingListItem(id: index, name: item));
     notifyListeners();
   }
 
   void toggleItem(int id) {
-    final item = shoppingListItems.firstWhere((element) => element.id == id);
+    final ShoppingListItem item = shoppingListItems.firstWhere((ShoppingListItem element) => element.id == id);
     item.isDone = !item.isDone;
     notifyListeners();
   }
 
   void removeItem(int id) {
-    shoppingListItems.removeWhere((element) => element.id == id);
+    shoppingListItems.removeWhere((ShoppingListItem element) => element.id == id);
     notifyListeners();
   }
 }

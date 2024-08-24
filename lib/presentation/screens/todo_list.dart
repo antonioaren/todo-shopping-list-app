@@ -26,7 +26,7 @@ class _TodoListState extends State<TodoList> {
   }
 
   void onAddItem() {
-    final shoppingListState = Provider.of<ShoppingListState>(
+    final ShoppingListState shoppingListState = Provider.of<ShoppingListState>(
       context,
       listen: false,
     );
@@ -48,7 +48,7 @@ class _TodoListState extends State<TodoList> {
         Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
-            children: [
+            children: <Widget>[
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
@@ -91,18 +91,19 @@ class ContentList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Consumer<ShoppingListState>(
-        builder: (context, shoppingListState, child) {
+        builder: (BuildContext context, ShoppingListState shoppingListState,
+            Widget? child) {
           final List<ShoppingListItem> items = shoppingListState.getCurrent();
 
           return ListView.builder(
             shrinkWrap: true,
             itemCount: items.length,
-            itemBuilder: (context, index) {
+            itemBuilder: (BuildContext context, int index) {
               return Dismissible(
                 // Specify a key if the Slidable is dismissible.
-                key: ValueKey(items[index].id),
+                key: ValueKey<int>(items[index].id),
 
-                onDismissed: (direction) {
+                onDismissed: (DismissDirection direction) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('${items[index].name} removed'),
@@ -116,6 +117,7 @@ class ContentList extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: DismissContent(),
                 ),
+
                 child: CheckboxContent(
                     items: items,
                     index: index,
@@ -140,7 +142,7 @@ class DismissContent extends StatelessWidget {
       padding: const EdgeInsets.only(right: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [
+        children: <Widget>[
           Text(
             'Delete',
             style: TextStyle(

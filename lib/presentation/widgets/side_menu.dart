@@ -13,7 +13,7 @@ class SideMenu extends StatefulWidget {
 
 class _SideMenu extends State<SideMenu> {
   // Here is the routes that we can use in the app.
-  var _selectedIndex = 0;
+  int _selectedIndex = 0;
 
   void _setIndexSelected(int index) {
     setState(() {
@@ -28,16 +28,16 @@ class _SideMenu extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
     // This is a widget that gives us the constrains of the parent widget. We can make things responsive with this.
-    return LayoutBuilder(builder: (context, constrains) {
+    return LayoutBuilder(builder: (BuildContext context, BoxConstraints constrains) {
       return Scaffold(
         body: Row(
-          children: [
+          children: <Widget>[
             SafeArea(
               // This is a widget that makes sure that the content is not behind the status bar or notch.
               child: NavigationRail(
                   extended: _isMenuLabelsShowUp(constrains.maxWidth),
                   destinations: Routes.pageDestinations
-                      .map((e) => e.destination)
+                      .map((PageDestination e) => e.destination)
                       .toList(),
                   selectedIndex: _selectedIndex,
                   onDestinationSelected: _setIndexSelected),
