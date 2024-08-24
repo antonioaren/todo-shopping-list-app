@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/shopping_list.dart';
@@ -82,38 +81,50 @@ class _TodoListState extends State<TodoList> {
                           shrinkWrap: true,
                           itemCount: items.length,
                           itemBuilder: (context, index) {
-                            return Slidable(
+                            return Dismissible(
                               // Specify a key if the Slidable is dismissible.
                               key: ValueKey(items[index]),
 
-                              // The start action pane is the one at the left or the top side.
-                              endActionPane: ActionPane(
-                                // A motion is a widget used to control how the pane animates.
-                                motion: const ScrollMotion(),
+                              onDismissed: (direction) {
+                                shoppingListState.removeItem(index);
 
-                                // A pane can dismiss the Slidable.
-                                dismissible: DismissiblePane(onDismissed: () {
-                                  shoppingListState.removeItem(index);
-                                }),
-
-                                // All actions are defined in the children parameter.
-                                children: [
-                                  // A SlidableAction can have an icon and/or a label.
-                                  SlidableAction(
-                                    onPressed: (BuildContext context) {
-                                      shoppingListState.removeItem(index);
-                                    },
-                                    backgroundColor: Color(0xFFFE4A49),
-                                    foregroundColor: Colors.white,
-                                    icon: Icons.delete,
-                                    label: 'Delete',
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Item dismissed'),
                                   ),
-                                ],
+                                );
+                              },
+                              background: Container(
+                                color: Colors.red,
+                                alignment: Alignment.centerRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 20),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        'Delete',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-
-                              // The child of the Slidable is what the user sees when the
-                              // component is not dragged.
-                              child: ListTile(title: Text(items[index])),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CheckboxListTile(
+                                  value: true,
+                                  title: Text(items[index]),
+                                  onChanged: (bool? value) {},
+                                ),
+                              ),
                             );
                           },
                         );
