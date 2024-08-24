@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/shopping_list.dart';
@@ -81,15 +82,37 @@ class _TodoListState extends State<TodoList> {
                           shrinkWrap: true,
                           itemCount: items.length,
                           itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(items[index]),
-                              trailing: IconButton(
-                                icon: Icon(Icons.close,
-                                    color: Colors.black, size: 24),
-                                onPressed: () {
-                                  shoppingListState.removeItem(index);
-                                },
+                            return Slidable(
+                              // Specify a key if the Slidable is dismissible.
+                              key: const ValueKey(0),
+
+                              // The start action pane is the one at the left or the top side.
+                              startActionPane: ActionPane(
+                                // A motion is a widget used to control how the pane animates.
+                                motion: const ScrollMotion(),
+
+                                // A pane can dismiss the Slidable.
+                                dismissible:
+                                    DismissiblePane(onDismissed: () {}),
+
+                                // All actions are defined in the children parameter.
+                                children: [
+                                  // A SlidableAction can have an icon and/or a label.
+                                  SlidableAction(
+                                    onPressed: (BuildContext context) {
+                                      shoppingListState.removeItem(index);
+                                    },
+                                    backgroundColor: Color(0xFFFE4A49),
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.delete,
+                                    label: 'Delete',
+                                  ),
+                                ],
                               ),
+
+                              // The child of the Slidable is what the user sees when the
+                              // component is not dragged.
+                              child: ListTile(title: Text(items[index])),
                             );
                           },
                         );
