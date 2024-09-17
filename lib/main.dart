@@ -20,10 +20,11 @@ class ShoppingList extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: <SingleChildWidget>[
-        ChangeNotifierProvider(
+        ChangeNotifierProvider<CounterState>(
             create: (BuildContext context) => CounterState()),
-        ChangeNotifierProvider(create: (BuildContext context) => WordState()),
-        ChangeNotifierProvider(
+        ChangeNotifierProvider<WordState>(
+            create: (BuildContext context) => WordState()),
+        ChangeNotifierProvider<ShoppingListState>(
             create: (BuildContext context) => ShoppingListState()),
       ],
       child: MaterialApp(
